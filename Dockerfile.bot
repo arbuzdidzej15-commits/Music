@@ -1,0 +1,15 @@
+FROM python:3.11-slim
+WORKDIR /app
+
+# ffmpeg нужен для аудио-эффектов
+RUN apt-get update && apt-get install -y --no-install-recommends ffmpeg \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY requirements.txt .
+RUN pip install --no-cache-dir -r requirements.txt
+
+# Копируем backend (нужен search.py) и bot
+COPY backend/search.py ./backend/search.py
+COPY bot/main.py ./bot/main.py
+
+CMD ["python", "bot/main.py"]
